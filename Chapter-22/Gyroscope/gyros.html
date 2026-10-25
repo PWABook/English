@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Universal sensor page</title>
+</head>
+
+<style>
+    body { font-family: sans-serif; padding: 20px;
+    background-color: #e4ebfc;}
+</style>
+
+<body>
+  <h1>Sensor: Gyroscope</h1>
+  <br>
+  <p id=data>here the data is displayed</p>
+</body>
+
+<script>
+try {
+    const gyro = new Gyroscope({ frequency: 30 });
+    gyro.onreading = () => {
+        document.getElementById("data").textContent =
+            "Gyroscope " +
+            "x: " + gyro.x.toFixed(2) + " " +
+            "y: " + gyro.y.toFixed(2) + " " +
+            "z: " + gyro.z.toFixed(2);
+    };
+    gyro.start();
+} catch (e) {
+    document.getElementById("data").textContent =
+    "The gyroscope is not supported";
+
+}
+</script>
+
+</html>
