@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Universal sensor page</title>
+</head>
+
+<style>
+    body { font-family: sans-serif; padding: 20px;
+    background-color: #e4ebfc;}
+</style>
+
+<body>
+  <h1>Sensor: Mobile data</h1>
+  <br>
+  <p id=data>here the data is displayed</p>
+</body>
+
+<script>
+function mobdata() {
+    const n = navigator.connection;
+
+    if (!n) {
+        document.getElementById("data").textContent =
+            "Network Information API not supported";
+        return;
+    }
+
+    const network = n.effectiveType;
+    const downlink = n.downlink;
+
+    document.getElementById("data").textContent =
+        "Network: " + network + " | Speed: " + downlink + " Mbps";
+}
+
+if (navigator.connection) {
+    navigator.connection.addEventListener("change", mobdata);
+}
+
+mobdata();
+
+setInterval(mobdata, 1000);
+</script>
+
+</html>
