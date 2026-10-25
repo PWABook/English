@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ff66ff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+
+  <title>Algemene sensor pagina</title>
+</head>
+
+<style>
+    body { font-family: sans-serif; padding: 20px;
+    background-color: #e4ebfc;}
+</style>
+
+<body>
+  <h1>Sensor: Proximity</h1>
+  <br>
+  <p id=data>hier komen de gegevens</p>
+</body>
+
+<script>
+
+  window.addEventListener("deviceproximity", (event) => {
+  const distance = event.value;   // in centimeters
+  const max = event.max;          // max detectable distance
+  const min = event.min;          // min detectable distance
+
+  document.getElementById("data").textContent =
+    `Distance: ${distance} cm (min: ${min}, max: ${max})`;
+});
+</script>
+
+</html>
