@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Play audio file</title>
+</head>
+<body>
+
+  <h2>Play audio</h2>
+  <button id="playBtn">Play Song</button>
+
+  <!-- Audio element -->
+  <audio id="audio" src="beet2.mp3"></audio>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const playBtn = document.getElementById("playBtn");
+
+    playBtn.addEventListener("click", () => {
+      audio.play();
+    });
+  </script>
+
+</body>
+</html>
