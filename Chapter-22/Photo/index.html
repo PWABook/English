@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Camera App</title>
+</head>
+<body>
+
+  <h2>Take a picture</h2>
+
+  <video id="video" autoplay playsinline width="300"></video>
+  <br><br>
+  <button id="snap">take picture</button>
+
+  <canvas id="canvas" style="display:none;"></canvas>
+
+  <script>
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const button = document.getElementById("snap");
+
+    // Camera starten
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" } // achtercamera
+        });
+        video.srcObject = stream;
+      } catch (err) {
+        alert("Camera is not functioning: " + err);
+      }
+    }
+
+    // Foto maken
+    button.onclick = () => {
+      const context = canvas.getContext("2d");
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Omzetten naar afbeelding
+      canvas.toBlob(function(blob) {
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "photo.png";
+        a.click();
+
+        URL.revokeObjectURL(url);
+      }, "image/png");
+    };
+
+    startCamera();
+  </script>
+
+</body>
+</html>
