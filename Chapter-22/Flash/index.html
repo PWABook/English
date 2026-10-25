@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Android Flashlight Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      gap: 20px;
+      background: #111;
+      color: #fff;
+    }
+
+    button {
+      font-size: 1.2rem;
+      padding: 16px 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #on {
+      background: #00c853;
+      color: black;
+    }
+
+    #off {
+      background: #ff5252;
+      color: black;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Flashlight</h1>
+
+  <button id="on">Flash On</button>
+  <button id="off">Flash Off</button>
+
+  <p id="status"></p>
+
+  <script>
+    let track = null;
+
+    async function initCamera() {
+      if (track) return;
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { exact: "environment" } }
+      });
+
+      track = stream.getVideoTracks()[0];
+
+      const capabilities = track.getCapabilities();
+      if (!capabilities.torch) {
+        throw new Error("Torch not supported on this device");
+      }
+    }
+
+    async function flashOn() {
+      try {
+        await initCamera();
+        await track.applyConstraints({
+          advanced: [{ torch: true }]
+        });
+        status.textContent = "Flash ON";
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    }
+
+    async function flashOff() {
+      try {
+        if (!track) return;
+        await track.applyConstraints({
+          advanced: [{ torch: false }]
+        });
+        status.textContent = "Flash OFF";
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    }
+
+    const status = document.getElementById("status");
+    document.getElementById("on").addEventListener("click", flashOn);
+    document.getElementById("off").addEventListener("click", flashOff);
+  </script>
+
+</body>
+</html>
