@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Universal sensor page</title>
+</head>
+
+<style>
+    body { font-family: sans-serif; padding: 20px;
+    background-color: #e4ebfc;}
+</style>
+
+<body>
+  <h1>Sensor: Magnetometer</h1>
+  <br>
+  <p id=data>here the data is displayed</p>
+</body>
+
+<script>
+try {
+    const magnet = new Magnetometer({ frequency: 30 });
+    magnet.onreading = () => {
+        document.getElementById("data").textContent =
+            "magnetometer " +
+            "x: " + magnet.x.toFixed(2) + " " +
+            "y: " + magnet.y.toFixed(2) + " " +
+            "z: " + magnet.z.toFixed(2);
+    };
+    magnet.start();
+} catch (e) {
+    document.getElementById("data").textContent =
+    "The magnetometer is not supported";
+
+}
+</script>
+
+</html>
