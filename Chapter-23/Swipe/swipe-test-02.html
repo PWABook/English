@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<body>
+  <div id="box" style="width:250px; height:400px; background:lightblue;"></div>
+  <pre id="output"></pre>
+
+  <script>
+
+function addGestureListeners(element) {
+    let startX = 0, startY = 0, startTime = 0;
+    let lastTapTime = 0;
+    let touchMoved = false;
+    let longPressTimer = null;
+
+    const TAP_MAX_TIME = 250;
+    const TAP_MAX_MOVEMENT = 10;
+    const DOUBLE_TAP_DELAY = 300;
+    const LONG_PRESS_TIME = 500;
+
+    element.addEventListener("touchstart", (e) => {
+        if (e.touches.length > 1) {
+            element.dispatchEvent(new CustomEvent("multitouch", { detail: e }));
+            return;
+        }
+
+        const t = e.touches[0];
+        startX = t.clientX;
+        startY = t.clientY;
+        startTime = Date.now();
+        touchMoved = false;
+
+        longPressTimer = setTimeout(() => {
+            element.dispatchEvent(new CustomEvent("longpress"));
+        }, LONG_PRESS_TIME);
+    });
+
+    element.addEventListener("touchmove", (e) => {
+        const t = e.touches[0];
+        const dx = Math.abs(t.clientX - startX);
+        const dy = Math.abs(t.clientY - startY);
+
+        if (dx > TAP_MAX_MOVEMENT || dy > TAP_MAX_MOVEMENT) {
+            touchMoved = true;
+            clearTimeout(longPressTimer);
+        }
+    });
+
+    element.addEventListener("touchend", (e) => {
+        clearTimeout(longPressTimer);
+
+        const dt = Date.now() - startTime;
+
+        // TAP / DOUBLE TAP
+        if (!touchMoved && dt < TAP_MAX_TIME) {
+            const now = Date.now();
+            if (now - lastTapTime < DOUBLE_TAP_DELAY) {
+                element.dispatchEvent(new CustomEvent("doubletap"));
+                lastTapTime = 0;
+            } else {
+                element.dispatchEvent(new CustomEvent("tap"));
+                lastTapTime = now;
+            }
+            return;
+        }
+
+        // SWIPE
+        const t = e.changedTouches[0];
+        const dx = t.clientX - startX;
+        const dy = t.clientY - startY;
+
+        if (Math.abs(dx) > Math.abs(dy)) {
+            if (dx > 30) element.dispatchEvent(new CustomEvent("swiperight"));
+            else if (dx < -30) element.dispatchEvent(new CustomEvent("swipeleft"));
+        } else {
+            if (dy > 30) element.dispatchEvent(new CustomEvent("swipedown"));
+            else if (dy < -30) element.dispatchEvent(new CustomEvent("swipeup"));
+        }
+    });
+}
+
+
+const box = document.getElementById("box");
+addGestureListeners(box);
+
+box.addEventListener("tap", () => alert("Tap"));
+box.addEventListener("doubletap", () => alert("Double Tap"));
+box.addEventListener("longpress", () => alert("Long Press"));
+
+box.addEventListener("swipeleft", () => alert("Swipe Left"));
+box.addEventListener("swiperight", () => alert("Swipe Right"));
+box.addEventListener("swipeup", () => alert("Swipe Up"));
+box.addEventListener("swipedown", () => alert("Swipe Down"));
+
+box.addEventListener("multitouch", () => alert("Multi-touch detected"));
+  </script>
+</body>
+</html>
