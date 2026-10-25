@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Write Clipboard</title>
+</head>
+<body>
+
+<button id="writeBtn">Write to Clipboard</button>
+
+<script>
+document.getElementById("writeBtn").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText("hello clipboard");
+    alert("Text written to clipboard");
+  } catch (err) {
+    alert("Failed to write: " + err);
+  }
+});
+</script>
+
+</body>
+</html>
