@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <button id="pick">Pick Contacts</button>
+  <pre id="output"></pre>
+
+  <script>
+    const button = document.getElementById("pick");
+    const output = document.getElementById("output");
+
+    button.addEventListener("click", async () => {
+      // Feature detection
+      if (!("contacts" in navigator && "select" in navigator.contacts)) {
+        output.textContent = "Contact Picker API not supported on this browser.";
+        return;
+      }
+
+      try {
+        // Fields you want to read
+        //const props = ["name", "email", "tel"];
+        const props = ['name', 'email', 'tel', 'address', 'icon'];
+
+        // Whether multiple contacts can be selected
+        const opts = { multiple: true };
+
+        const contacts = await navigator.contacts.select(props, opts);
+
+        output.textContent = JSON.stringify(contacts, null, 2);
+      } catch (err) {
+        output.textContent = "Error: " + err;
+      }
+    });
+  </script>
+</body>
+</html>
